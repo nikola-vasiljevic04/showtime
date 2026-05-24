@@ -13,9 +13,9 @@ import kotlinx.coroutines.runBlocking
 import org.koin.dsl.module
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthState
-import rs.edu.raf.rma.networking.BeskarApi
 import rs.edu.raf.rma.networking.HttpClientFactory
-import rs.edu.raf.rma.networking.createBeskarApi
+import rs.edu.raf.rma.networking.ShowtimeApi
+import rs.edu.raf.rma.networking.createShowtimeApi
 
 val networkingModule = module {
 
@@ -63,12 +63,12 @@ val networkingModule = module {
         }
     }
 
-    single<BeskarApi> {
-        Ktorfit.Builder()
-            .httpClient(get<HttpClient>(Qualifiers.Unauthenticated))
-            .baseUrl("https://rma.finlab.rs/beskar/")
+    single<ShowtimeApi> {
+        de.jensklingenberg.ktorfit.Ktorfit.Builder()
+            .httpClient(get<io.ktor.client.HttpClient>(Qualifiers.Unauthenticated))
+            .baseUrl("https://rma.finlab.rs/")
             .build()
-            .createBeskarApi()
+            .createShowtimeApi()
     }
 }
 
