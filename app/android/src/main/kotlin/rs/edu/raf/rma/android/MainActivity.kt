@@ -13,7 +13,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Log.d("Test", "Main:onCreate()")
         setContent {
-//            PasswordsApp()
             ShowtimeApp()
         }
     }

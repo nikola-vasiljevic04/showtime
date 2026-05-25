@@ -1,21 +1,26 @@
 package rs.edu.raf.rma
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import io.ktor.websocket.Frame
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import rs.edu.raf.rma.auth.AuthScreen
+import rs.edu.raf.rma.auth.AuthViewModel
+import rs.edu.raf.rma.core.auth.AuthStore
+import rs.edu.raf.rma.core.auth.model.AuthState
 
 @Composable
 fun ShowtimeApp() {
-    MaterialTheme {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Showtime - Spreman za rad!")
+    val authStore: AuthStore = koinInject()
+    val authState by authStore.authState.collectAsState()
+
+    when (authState) {
+        is AuthState.Unauthenticated -> {
+            AuthScreen(viewModel = koinViewModel<AuthViewModel>())
+        }
+        is AuthState.Authenticated -> {
+            // Ovde ćemo staviti CatalogScreen kad ga napravimo
+            Frame.Text("Ulogovan si! Spreman za katalog.")
         }
     }
 }

@@ -8,14 +8,12 @@ import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import rs.edu.raf.rma.core.db.converters.DateConverters
 
 @Database(
     entities = [MovieEntity::class, UserStatsEntity::class],
     version = 1,
     exportSchema = false, // Stavi na false da ti se KSP ne bi bunio oko schema foldera
 )
-@TypeConverters(DateConverters::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun showtimeDao(): ShowtimeDao

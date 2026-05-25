@@ -5,8 +5,7 @@ import org.koin.core.module.dsl.viewModel
 import rs.edu.raf.rma.auth.AuthRepository
 import rs.edu.raf.rma.auth.AuthViewModel
 
-val authModule = module {
+val authFeatureModule = module {
     single { AuthRepository(get(), get()) }
-
     viewModel { AuthViewModel(get()) }
 }
