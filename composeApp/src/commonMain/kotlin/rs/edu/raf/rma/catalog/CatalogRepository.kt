@@ -13,7 +13,7 @@ class CatalogRepository(
     val moviesStream: Flow<List<MovieEntity>> = dao.observeAllMovies()
 
     suspend fun fetchAndSaveMovies() {
-        val response = api.getMovies(page = 1, pageSize = 20)
+        val response = api.getMovies(page = 1, pageSize = 30)
 
         val entities = response.items.map { it.toEntity() }
         dao.upsertMovies(entities)

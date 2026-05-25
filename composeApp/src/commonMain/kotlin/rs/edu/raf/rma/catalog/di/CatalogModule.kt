@@ -8,6 +8,5 @@ import rs.edu.raf.rma.networking.di.Qualifiers
 
 val catalogFeatureModule = module {
     single { CatalogRepository(api = get(Qualifiers.Unauthenticated), dao = get()) }
-
     viewModel { CatalogViewModel(repository = get()) }
 }
