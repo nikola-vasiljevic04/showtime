@@ -3,7 +3,10 @@ interface AuthContract {
     data class UiState(
         val isLoading: Boolean = false,
         val error: String? = null,
-        val currentScreen: AuthScreen = AuthScreen.LANDING
+        val currentScreen: AuthScreen = AuthScreen.LANDING,
+        val username: String = "",
+        val password: String = "",
+        val fullName: String = ""
     )
 
     enum class AuthScreen {
@@ -15,6 +18,9 @@ interface AuthContract {
         data class Login(val user: String, val pass: String) : UiEvent()
         data class Signup(val name: String, val user: String, val pass: String) : UiEvent()
         data object ClearError : UiEvent()
+        data class UpdateUsername(val text: String) : UiEvent()
+        data class UpdatePassword(val text: String) : UiEvent()
+        data class UpdateFullName(val text: String) : UiEvent()
     }
 
     sealed class SideEffect {

@@ -13,4 +13,6 @@ actual fun databaseModule() = module {
             )
         )
     }
+
+    single { get<AppDatabase>().showtimeDao() }
 }

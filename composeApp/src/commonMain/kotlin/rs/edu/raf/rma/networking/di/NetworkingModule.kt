@@ -9,6 +9,9 @@ import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.dsl.module
 import rs.edu.raf.rma.core.auth.AuthStore
@@ -63,9 +66,9 @@ val networkingModule = module {
         }
     }
 
-    single<ShowtimeApi> {
+    single<ShowtimeApi>(Qualifiers.Unauthenticated) {
         de.jensklingenberg.ktorfit.Ktorfit.Builder()
-            .httpClient(get<io.ktor.client.HttpClient>(Qualifiers.Unauthenticated))
+            .httpClient(get<HttpClient>(Qualifiers.Unauthenticated))
             .baseUrl("https://rma.finlab.rs/")
             .build()
             .createShowtimeApi()
@@ -93,47 +96,70 @@ private fun HttpClientConfig<*>.installAuthPlugin(
             AuthState.Unauthenticated -> Unit
         }
     }
-
     on(Send) { request ->
         val originalCall = proceed(request)
 
         originalCall.response.run {
+            // Ako nije 401, samo vrati odgovor
             if (status != HttpStatusCode.Unauthorized) {
                 return@run originalCall
             }
 
-            // Token expired
-            // Trebalo bi da osvezimo access token sa refresh tokenom
-            // ali ovo nece biti potrebno za drugi projekat.
-            // Od prilike bi ovako izgledalo, kada bismo radili:
+            // AKO JE 401: Pokrećemo prinudnu odjavu
+            val authStore = authStoreLazy.value
 
-
-
-            val newAuthState = runBlocking {
-                // Zovemo refresh funkciju i vracamo njen rezultat
-//                val authStore = authStoreLazy.value
-//                authStore.refresh()
-
-                // U ovom primeru pretvaramo se da je refresh token istekao
-                AuthState.Unauthenticated
+            // Koristimo CoroutineScope da ne bismo blokirali mrežnu nit (Network Thread)
+            // AuthStore je SSOT, pa kad ovo pozovemo, stanje se menja globalno.
+            CoroutineScope(Dispatchers.Default).launch {
+                authStore.clearAuthData()
             }
 
-            @Suppress("IMPOSSIBLE_IS_CHECK_WARNING")
-            when (newAuthState) {
-                is AuthState.Authenticated -> {
-                    // Refresh uspeo - ponavljamo zahtev sa novim tokenom
-                    request.headers.remove(name = HttpHeaders.Authorization)
-                    request.headers.append(
-                        name = HttpHeaders.Authorization,
-                        value = "Bearer ${newAuthState.data.accessToken}",
-                    )
-                    proceed(request)
-                }
-                AuthState.Unauthenticated -> {
-                    // Refresh puko - vracamo originalni 401 response
-                    originalCall
-                }
-            }
+            // Vraćamo originalni odgovor da ViewModel ili UI mogu da reaguju na grešku ako treba
+            originalCall
         }
     }
+//    on(Send) { request ->
+//        val originalCall = proceed(request)
+//
+//        originalCall.response.run {
+//            if (status != HttpStatusCode.Unauthorized) {
+//                return@run originalCall
+//
+//            }
+//
+//            // Token expired
+//            // Trebalo bi da osvezimo access token sa refresh tokenom
+//            // ali ovo nece biti potrebno za drugi projekat.
+//            // Od prilike bi ovako izgledalo, kada bismo radili:
+//
+//
+//
+//            val newAuthState = runBlocking {
+//                // Zovemo refresh funkciju i vracamo njen rezultat
+////                val authStore = authStoreLazy.value
+////                authStore.refresh()
+//
+//                // U ovom primeru pretvaramo se da je refresh token istekao
+//                AuthState.Unauthenticated
+//            }
+//
+//            @Suppress("IMPOSSIBLE_IS_CHECK_WARNING")
+//            when (newAuthState) {
+//                is AuthState.Authenticated -> {
+//                    // Refresh uspeo - ponavljamo zahtev sa novim tokenom
+//                    request.headers.remove(name = HttpHeaders.Authorization)
+//                    request.headers.append(
+//                        name = HttpHeaders.Authorization,
+//                        value = "Bearer ${newAuthState.data.accessToken}",
+//                    )
+//                    proceed(request)
+//                }
+//                AuthState.Unauthenticated -> {
+//                    // Refresh puko - vracamo originalni 401 response
+//                    originalCall
+//
+//                }
+//            }
+//        }
+
 })

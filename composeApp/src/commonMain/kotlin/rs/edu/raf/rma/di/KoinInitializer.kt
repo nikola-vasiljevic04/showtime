@@ -4,6 +4,7 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import rs.edu.raf.rma.auth.di.authFeatureModule
+import rs.edu.raf.rma.catalog.di.catalogFeatureModule
 import rs.edu.raf.rma.core.auth.di.authCoreModule
 import rs.edu.raf.rma.core.db.di.databaseModule
 import rs.edu.raf.rma.networking.di.networkingModule
@@ -15,7 +16,8 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication {
             databaseModule(),
             networkingModule,
             authCoreModule,
-            authFeatureModule
+            authFeatureModule,
+            catalogFeatureModule
         )
     }
 }

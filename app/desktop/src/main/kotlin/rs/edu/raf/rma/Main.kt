@@ -9,9 +9,8 @@ fun main() {
     application {
         Window(
             onCloseRequest = ::exitApplication,
-            title = "Demo",
+            title = "SHOWTIME",
         ) {
-//            PasswordsApp()
             ShowtimeApp()
         }
     }

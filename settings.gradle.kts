@@ -35,4 +35,3 @@ plugins {
 include(":app:android")
 include(":app:desktop")
 include(":composeApp")
-include(":kotlin")

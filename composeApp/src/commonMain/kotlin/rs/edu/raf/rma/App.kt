@@ -6,6 +6,8 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import rs.edu.raf.rma.auth.AuthScreen
 import rs.edu.raf.rma.auth.AuthViewModel
+import rs.edu.raf.rma.catalog.CatalogScreen
+import rs.edu.raf.rma.catalog.CatalogViewModel
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthState
 
@@ -19,8 +21,7 @@ fun ShowtimeApp() {
             AuthScreen(viewModel = koinViewModel<AuthViewModel>())
         }
         is AuthState.Authenticated -> {
-            // Ovde ćemo staviti CatalogScreen kad ga napravimo
-            Frame.Text("Ulogovan si! Spreman za katalog.")
+            CatalogScreen(viewModel = koinViewModel<CatalogViewModel>())
         }
     }
 }
