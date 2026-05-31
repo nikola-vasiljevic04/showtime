@@ -8,11 +8,19 @@ import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import rs.edu.raf.rma.core.db.entities.*
 
 @Database(
-    entities = [MovieEntity::class, UserStatsEntity::class],
-    version = 1,
-    exportSchema = false, // Stavi na false da ti se KSP ne bi bunio oko schema foldera
+    entities = [
+        MovieEntity::class,
+        UserStatsEntity::class,
+        GenreEntity::class,
+        MovieDetailsEntity::class,
+        FavoriteEntity::class,
+        WatchlistEntity::class
+               ],
+    version = 5,
+    exportSchema = false,
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -29,7 +37,8 @@ fun buildAppDatabase(
     builder: RoomDatabase.Builder<AppDatabase>,
 ): AppDatabase {
     return builder
-        .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
+        .fallbackToDestructiveMigration(dropAllTables = true)
+        //.fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }

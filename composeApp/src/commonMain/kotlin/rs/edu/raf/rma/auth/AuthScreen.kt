@@ -33,9 +33,18 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthScreen(viewModel: AuthViewModel) {
+fun AuthScreen(
+    viewModel: AuthViewModel,
+    onNavigateToCatalog: () -> Unit
+) {
     val state by viewModel.uiState.collectAsState()
-
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is AuthContract.SideEffect.NavigateToCatalog -> onNavigateToCatalog()
+            }
+        }
+    }
     // Ovo stanje sme biti lokalno jer se odnosi samo na UI animaciju (ikonica oka)
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -138,7 +147,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
 
             OutlinedTextField(
                 value = state.username,
-                onValueChange = { viewModel.onEvent(AuthContract.UiEvent.UpdateUsername(it.trim())) },
+                onValueChange = { viewModel.onEvent(AuthContract.UiEvent.UpdateUsername(it)) },
                 label = { Text("Username", color = textMuted) },
                 leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = textMuted) },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -160,7 +169,9 @@ fun AuthScreen(viewModel: AuthViewModel) {
                     focusedTextColor = Color.White,
                     unfocusedTextColor = textLight,
                     errorContainerColor = darkGray,
-                    errorBorderColor = errorRed
+                    errorBorderColor = errorRed,
+                    errorTextColor = Color.White,
+                    errorCursorColor = iosBlue
                 )
             )
 
@@ -168,7 +179,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
 
             OutlinedTextField(
                 value = state.password,
-                onValueChange = { viewModel.onEvent(AuthContract.UiEvent.UpdatePassword(it.trim())) },
+                onValueChange = { viewModel.onEvent(AuthContract.UiEvent.UpdatePassword(it)) },
                 label = { Text("Password", color = textMuted) },
                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = textMuted) },
                 trailingIcon = {
@@ -197,7 +208,9 @@ fun AuthScreen(viewModel: AuthViewModel) {
                     focusedTextColor = Color.White,
                     unfocusedTextColor = textLight,
                     errorContainerColor = darkGray,
-                    errorBorderColor = errorRed
+                    errorBorderColor = errorRed,
+                    errorTextColor = Color.White,
+                    errorCursorColor = iosBlue
                 )
             )
 

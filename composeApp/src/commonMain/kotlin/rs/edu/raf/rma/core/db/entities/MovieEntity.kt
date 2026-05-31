@@ -1,4 +1,4 @@
-package rs.edu.raf.rma.core.db
+package rs.edu.raf.rma.core.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,6 +12,5 @@ data class MovieEntity(
     val imdbVotes: Int?,
     val posterPath: String?,
     val genresString: String,
-    val isFavorite: Boolean = false,
-    val inWatchlist: Boolean = false
+    val genreIds: String
 )
