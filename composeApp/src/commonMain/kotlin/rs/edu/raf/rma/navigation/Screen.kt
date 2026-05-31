@@ -8,7 +8,6 @@ sealed class Screen(val route: String) {
     data object Quiz : Screen("quiz")
     data object Profile : Screen("profile")
 
-    // Ekran sa parametrom (ID filma)
     data object MovieDetails : Screen("details/{movieId}") {
         fun createRoute(movieId: String) = "details/$movieId"
     }

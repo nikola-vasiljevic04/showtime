@@ -23,12 +23,10 @@ fun ShowtimeApp() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            // Injektujemo SplashViewModel
             val splashViewModel = koinViewModel<SplashViewModel>()
             val bootState by splashViewModel.bootState.collectAsState()
             val isLoggedIn by splashViewModel.isLoggedIn.collectAsState()
 
-            // State mašina za pokretanje aplikacije
             when (bootState) {
                 is BootState.Loading -> {
                     SplashScreen()
@@ -37,8 +35,7 @@ fun ShowtimeApp() {
                     Text("Greška pri pokretanju aplikacije")
                 }
                 is BootState.Success -> {
-                    // Određujemo početni ekran na osnovu ulogovanosti
-                    val startDest = if (isLoggedIn) "catalog" else "auth_landing"
+                    val startDest = if (isLoggedIn) "main" else "auth_landing"
 
                     ShowtimeNavigation(
                         startDestination = startDest,

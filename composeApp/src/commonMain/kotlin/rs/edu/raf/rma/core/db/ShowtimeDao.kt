@@ -37,7 +37,7 @@ interface ShowtimeDao {
         minYear: Int,
         maxYear: Int,
         sortBy: String
-    ): Flow<List<MovieWithStatus>> // OBAVEZNO promeniti return tip u MovieWithStatus
+    ): Flow<List<MovieWithStatus>>
 
 
     @Query("SELECT COUNT(*) FROM movies")

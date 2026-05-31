@@ -35,49 +35,42 @@ fun ShowtimeNavigation(
             AuthScreen(
                 viewModel = viewModel,
                 onNavigateToCatalog = {
-                    // Kad auth uspe, prebacujemo se na katalog i brišemo auth iz backstack-a!
-                    navController.navigate("catalog") {
+                    // PROMENI "catalog" U "main"
+                    navController.navigate("main") {
                         popUpTo("auth_landing") { inclusive = true }
                     }
                 }
             )
         }
-        composable(route = "catalog") {
-            val viewModel = koinViewModel<CatalogViewModel>()
-            CatalogScreen(
-                viewModel = viewModel,
+
+        // Glavna ruta koja sadrži BottomBar i tabove
+        composable(route = "main") {
+            MainScreen(
                 onThemeToggle = onThemeToggle,
-                onNavigateToDetails = { navController.navigateToMovieDetails(movieId = it) },
+                onNavigateToDetails = { navController.navigate("details/$it") },
                 onNavigateToFilters = { navController.navigate("filters") }
             )
         }
 
         composable(route = "filters") {
-            val viewModel = koinViewModel<FiltersViewModel>()
             FiltersScreen(
-                viewModel = viewModel,
+                viewModel = koinViewModel<FiltersViewModel>(),
                 onNavigateBack = { navController.navigateUp() }
             )
         }
 
         composable(
             route = "details/{movieId}",
-            arguments = listOf(
-                navArgument("movieId") { type = NavType.StringType }
-            )
+            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
         ) {
-            // Koin će automatski ubaciti "movieId" iz Bundle-a u SavedStateHandle
-            val viewModel = koinViewModel<MovieDetailsViewModel>()
-
             MovieDetailsScreen(
-                viewModel = viewModel,
+                viewModel = koinViewModel<MovieDetailsViewModel>(),
                 onNavigateBack = { navController.popBackStack() }
             )
         }
     }
 }
 
-// Ekstenzione funkcije za sigurniju navigaciju (kao kod njih na vežbama)
 private fun NavController.navigateToMovieDetails(movieId: String) {
     navigate("details/$movieId")
 }
