@@ -2,12 +2,14 @@ package rs.edu.raf.rma.auth
 
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthData
+import rs.edu.raf.rma.core.db.ShowtimeDao
 import rs.edu.raf.rma.networking.ShowtimeApi
 import rs.edu.raf.rma.networking.model.AuthRequest
 
 class AuthRepository(
     private val api: ShowtimeApi,
-    private val authStore: AuthStore
+    private val authStore: AuthStore,
+    private val dao: ShowtimeDao
 ) {
     suspend fun login(username: String, pass: String) {
         val response = api.login(AuthRequest(username = username, password = pass))
@@ -25,6 +27,8 @@ class AuthRepository(
 
     suspend fun logout() {
         authStore.clearAuthData()
-        // Kasnije ćemo ovde dodati i brisanje lokalnih Room tabela (Favorites, Watchlist)
+
+        dao.clearFavorites()
+        dao.clearWatchlist()
     }
 }

@@ -39,7 +39,9 @@ fun ShowtimeApp() {
 
                     ShowtimeNavigation(
                         startDestination = startDest,
-                        onThemeToggle = { isDarkTheme = !isDarkTheme})
+                        isLoggedIn = isLoggedIn,
+                        onThemeToggle = { isDarkTheme = !isDarkTheme }
+                    )
                 }
             }
         }

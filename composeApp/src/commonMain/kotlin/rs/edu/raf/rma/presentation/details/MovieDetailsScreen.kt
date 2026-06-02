@@ -96,7 +96,6 @@ fun MovieDetailsScreen(
                         InfoSection(details = details)
                     }
 
-                    // 5. Galerija Slika
                     if (details.backdrops.isNotEmpty()) {
                         item {
                             ImagesGallerySection(backdrops = details.backdrops)

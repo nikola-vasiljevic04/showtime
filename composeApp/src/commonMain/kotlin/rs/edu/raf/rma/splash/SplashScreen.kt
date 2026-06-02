@@ -37,7 +37,6 @@ private fun AppAnimatedLogo() {
         animationSpec = infiniteRepeatable(tween(1200), RepeatMode.Reverse),
     )
 
-    // Pošto možda nemaš sliku, ispisujemo "Showtime" koji pulsira (uvećava se font)
     Text(
         text = "Showtime",
         color = MaterialTheme.colorScheme.onPrimary,

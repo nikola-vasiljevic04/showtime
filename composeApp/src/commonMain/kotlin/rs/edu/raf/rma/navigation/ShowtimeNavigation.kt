@@ -1,6 +1,7 @@
 package rs.edu.raf.rma.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,10 +23,17 @@ const val MOVIE_ID_ARG = "movieId"
 @Composable
 fun ShowtimeNavigation(
     startDestination: String,
+    isLoggedIn: Boolean,
     onThemeToggle: () -> Unit,
 ) {
     val navController = rememberNavController()
-
+    LaunchedEffect(isLoggedIn) {
+        if (!isLoggedIn && navController.currentDestination?.route != "auth_landing") {
+            navController.navigate("auth_landing") {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -35,7 +43,6 @@ fun ShowtimeNavigation(
             AuthScreen(
                 viewModel = viewModel,
                 onNavigateToCatalog = {
-                    // PROMENI "catalog" U "main"
                     navController.navigate("main") {
                         popUpTo("auth_landing") { inclusive = true }
                     }
@@ -43,7 +50,6 @@ fun ShowtimeNavigation(
             )
         }
 
-        // Glavna ruta koja sadrži BottomBar i tabove
         composable(route = "main") {
             MainScreen(
                 onThemeToggle = onThemeToggle,

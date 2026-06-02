@@ -7,6 +7,6 @@ import rs.edu.raf.rma.auth.AuthViewModel
 import rs.edu.raf.rma.networking.di.Qualifiers
 
 val authFeatureModule = module {
-    single { AuthRepository(get(Qualifiers.Unauthenticated), get()) }
+    single { AuthRepository(get(Qualifiers.Unauthenticated), get(),get()) }
     viewModel { AuthViewModel(get()) }
 }

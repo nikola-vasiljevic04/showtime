@@ -1,5 +1,6 @@
 package rs.edu.raf.rma.navigation
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -60,7 +61,9 @@ fun MainScreen(
         NavHost(
             navController = bottomNavController,
             startDestination = BottomNavItem.Catalog.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
         ) {
             composable(BottomNavItem.Catalog.route) {
                 CatalogScreen(
@@ -83,7 +86,11 @@ fun MainScreen(
                 )
             }
             composable(BottomNavItem.Quiz.route) { /* TODO Quiz Screen */ }
-            composable(BottomNavItem.Profile.route) { /* TODO Profile Screen */ }
+            composable(BottomNavItem.Profile.route) {
+                rs.edu.raf.rma.presentation.profile.ProfileScreen(
+                    viewModel = koinViewModel<rs.edu.raf.rma.presentation.profile.ProfileViewModel>()
+                )
+            }
         }
     }
 }

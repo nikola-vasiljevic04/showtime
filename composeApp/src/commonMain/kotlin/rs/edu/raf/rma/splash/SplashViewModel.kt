@@ -4,22 +4,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthState
 import kotlin.time.Duration.Companion.seconds
 
 class SplashViewModel(
-    private  val authStore: AuthStore
+    private val authStore: AuthStore
 ) : ViewModel() {
 
     private val _bootState = MutableStateFlow<BootState>(BootState.Loading)
     val bootState: StateFlow<BootState> = _bootState.asStateFlow()
-
-    private val _isLoggedIn = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
+    val isLoggedIn: StateFlow<Boolean> = authStore.authState
+        .map { it is AuthState.Authenticated }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false
+        )
 
     init {
         checkAuthState()
@@ -27,8 +34,7 @@ class SplashViewModel(
 
     private fun checkAuthState() = viewModelScope.launch {
         try {
-            val authState = authStore.awaitInitialAuthState()
-            _isLoggedIn.value = authState is AuthState.Authenticated
+            authStore.awaitInitialAuthState()
             delay(2.seconds)
             _bootState.value = BootState.Success
         } catch (e: Exception) {

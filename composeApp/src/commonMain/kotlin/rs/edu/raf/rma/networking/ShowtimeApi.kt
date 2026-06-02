@@ -118,11 +118,11 @@ interface ShowtimeApi {
         @Query("page") page: Int = 1,
         @Query("page_size") pageSize: Int = 20
     ): PaginatedResponse<QuizResultDto>
-    @GET("movies/{id}/cast")
-    suspend fun getMovieCast(
-        @Path("id") id: String,
-        @Query("page_size") pageSize: Int = 20
-    ): CastResponseApiModel
+//    @GET("movies/{id}/cast")
+//    suspend fun getMovieCast(
+//        @Path("id") id: String,
+//        @Query("page_size") pageSize: Int = 20
+//    ): CastResponseApiModel
 
 
 }

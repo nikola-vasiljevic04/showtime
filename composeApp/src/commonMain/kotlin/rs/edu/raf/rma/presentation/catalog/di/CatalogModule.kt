@@ -1,6 +1,7 @@
 package rs.edu.raf.rma.presentation.catalog.di
 
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import rs.edu.raf.rma.data.repository.CatalogRepositoryImpl
 import rs.edu.raf.rma.domain.repository.CatalogRepository
@@ -19,21 +20,25 @@ val catalogFeatureModule = module {
             dao = get()
         )
     }
-
-    viewModel {
-        CatalogViewModel(
-            repository = get<CatalogRepository>(),
-            filterManager = get()
-        )
-    }
-
-    viewModel {
-        FiltersViewModel(
-            repository = get<CatalogRepository>(),
-            filterManager = get()
-        )
-    }
-    viewModel { MovieDetailsViewModel(savedStateHandle = get(), repository = get()) }
-    viewModel { FavoritesViewModel(repository = get()) }
-    viewModel { WatchlistViewModel(repository = get()) }
+    viewModelOf(::CatalogViewModel)
+    viewModelOf(::FiltersViewModel)
+    viewModelOf(::MovieDetailsViewModel)
+    viewModelOf(::FavoritesViewModel)
+    viewModelOf(::WatchlistViewModel)
+//    viewModel {
+//        CatalogViewModel(
+//            repository = get<CatalogRepository>(),
+//            filterManager = get()
+//        )
+//    }
+//
+//    viewModel {
+//        FiltersViewModel(
+//            repository = get<CatalogRepository>(),
+//            filterManager = get()
+//        )
+//    }
+//    viewModel { MovieDetailsViewModel(savedStateHandle = get(), repository = get()) }
+//    viewModel { FavoritesViewModel(repository = get()) }
+//    viewModel { WatchlistViewModel(repository = get()) }
 }

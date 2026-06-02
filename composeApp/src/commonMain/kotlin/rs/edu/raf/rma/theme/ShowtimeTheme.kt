@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 // (Dark Mode)
 private val DarkColorPalette = darkColorScheme(
-    primary = Color(0xFF7A28CB), // Neka tvoja glavna boja (npr. iOS plava)
+    primary = Color(0xFF7A28CB),
     background = Color(0xFF121212),
     surface = Color(0xFF1E1E1E),
 //    background = Color(0xFF000000),

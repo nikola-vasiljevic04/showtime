@@ -45,13 +45,11 @@ fun AuthScreen(
             }
         }
     }
-    // Ovo stanje sme biti lokalno jer se odnosi samo na UI animaciju (ikonica oka)
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val isLoginMode = state.currentScreen == AuthContract.AuthScreen.LOGIN
 
-    // Validacija na osnovu stanja iz ViewModel-a
     val usernameRegex = "^[a-zA-Z0-9_]*$".toRegex()
     val isUsernameValid = state.username.length >= 3 && state.username.matches(usernameRegex)
     val isPasswordValid = state.password.length >= 8
