@@ -107,14 +107,14 @@ class CatalogViewModel(
     private fun toggleFavorite(movie: Movie) {
         viewModelScope.launch {
             runCatching { repository.toggleFavorite(movie) }
-                .onFailure { _effects.emit(CatalogContract.SideEffect.ShowSnackbar("Error updating watchlist. Please try again later.")) }
+                .onFailure { _effects.emit(CatalogContract.SideEffect.ShowSnackbar("Error updating favorites. Please try again later.")) }
         }
     }
 
     private fun toggleWatchlist(movie: Movie) {
         viewModelScope.launch {
             runCatching { repository.toggleWatchlist(movie) }
-                .onFailure { _effects.emit(CatalogContract.SideEffect.ShowSnackbar("Error updating favorites. Please try again later.")) }
+                .onFailure { _effects.emit(CatalogContract.SideEffect.ShowSnackbar("Error updating watchlist. Please try again later.")) }
         }
     }
 }

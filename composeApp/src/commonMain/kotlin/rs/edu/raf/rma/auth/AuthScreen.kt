@@ -248,7 +248,6 @@ fun AuthScreen(
                         if (isLoginMode) AuthContract.AuthScreen.SIGNUP else AuthContract.AuthScreen.LOGIN
                     ))
                     viewModel.onEvent(AuthContract.UiEvent.ClearError)
-                    // Resetujemo polja u ViewModel-u pri promeni ekrana
                     viewModel.onEvent(AuthContract.UiEvent.UpdateUsername(""))
                     viewModel.onEvent(AuthContract.UiEvent.UpdatePassword(""))
                     viewModel.onEvent(AuthContract.UiEvent.UpdateFullName(""))

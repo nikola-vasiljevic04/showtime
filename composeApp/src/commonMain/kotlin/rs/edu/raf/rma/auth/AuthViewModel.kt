@@ -21,13 +21,10 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(AuthContract.UiState())
     val uiState = _uiState.asStateFlow()
 
-    // Slanje side-effecta ka UI-ju (npr. prelazak na Katalog)
     private val _effect = MutableSharedFlow<AuthContract.SideEffect>()
     val effect = _effect.asSharedFlow()
 
     private val jsonParser = Json { ignoreUnknownKeys = true }
-
-    // Pravila iz specifikacije
     private val usernameRegex = "^[a-zA-Z0-9_]{3,}\$".toRegex()
 
     fun onEvent(event: AuthContract.UiEvent) {
@@ -57,7 +54,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 repository.login(state.username, state.password)
-                _effect.emit(AuthContract.SideEffect.NavigateToCatalog) // USPEH! Prebaci ekran!
+                _effect.emit(AuthContract.SideEffect.NavigateToCatalog)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = extractErrorMessage(e)) }
             } finally {
@@ -87,7 +84,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 repository.signup(state.fullName, state.username, state.password)
-                _effect.emit(AuthContract.SideEffect.NavigateToCatalog) // USPEH!
+                _effect.emit(AuthContract.SideEffect.NavigateToCatalog)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = extractErrorMessage(e)) }
             } finally {

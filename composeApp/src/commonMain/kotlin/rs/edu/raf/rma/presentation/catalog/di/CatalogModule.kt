@@ -25,20 +25,4 @@ val catalogFeatureModule = module {
     viewModelOf(::MovieDetailsViewModel)
     viewModelOf(::FavoritesViewModel)
     viewModelOf(::WatchlistViewModel)
-//    viewModel {
-//        CatalogViewModel(
-//            repository = get<CatalogRepository>(),
-//            filterManager = get()
-//        )
-//    }
-//
-//    viewModel {
-//        FiltersViewModel(
-//            repository = get<CatalogRepository>(),
-//            filterManager = get()
-//        )
-//    }
-//    viewModel { MovieDetailsViewModel(savedStateHandle = get(), repository = get()) }
-//    viewModel { FavoritesViewModel(repository = get()) }
-//    viewModel { WatchlistViewModel(repository = get()) }
 }

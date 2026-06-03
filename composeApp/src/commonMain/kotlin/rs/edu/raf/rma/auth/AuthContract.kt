@@ -3,7 +3,7 @@ interface AuthContract {
     data class UiState(
         val isLoading: Boolean = false,
         val error: String? = null,
-        val currentScreen: AuthScreen = AuthScreen.LANDING,
+        val currentScreen: AuthScreen = AuthScreen.LOGIN,
         val username: String = "",
         val password: String = "",
         val fullName: String = ""
