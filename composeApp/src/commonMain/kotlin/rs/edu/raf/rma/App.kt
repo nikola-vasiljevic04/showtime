@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
 import rs.edu.raf.rma.navigation.ShowtimeNavigation
@@ -17,7 +18,7 @@ import rs.edu.raf.rma.theme.ShowtimeTheme
 @Composable
 fun ShowtimeApp() {
     val systemTheme = isSystemInDarkTheme()
-    var isDarkTheme by remember { mutableStateOf(systemTheme) }
+    var isDarkTheme by rememberSaveable() { mutableStateOf(systemTheme) }
     ShowtimeTheme(darkTheme = isDarkTheme) {
         Surface(
             modifier = Modifier.fillMaxSize(),

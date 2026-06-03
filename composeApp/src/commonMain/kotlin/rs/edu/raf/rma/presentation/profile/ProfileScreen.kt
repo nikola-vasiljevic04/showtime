@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import rs.edu.raf.rma.presentation.profile.components.LogoutButton
 import rs.edu.raf.rma.presentation.profile.components.StatCard
 import rs.edu.raf.rma.presentation.profile.components.UserProfileHeader
@@ -24,12 +25,16 @@ fun ProfileScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is ProfileContract.SideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
-                else -> {}
+                is ProfileContract.SideEffect.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
+                is ProfileContract.SideEffect.NavigateToAuth -> { /* tvoja navigacija */ }
             }
         }
     }

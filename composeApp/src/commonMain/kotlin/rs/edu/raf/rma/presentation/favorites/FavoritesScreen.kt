@@ -19,9 +19,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import rs.edu.raf.rma.presentation.catalog.components.MovieCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,12 +34,16 @@ fun FavoritesScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 is FavoritesContract.SideEffect.NavigateToDetails -> onNavigateToDetails(effect.movieId)
-                is FavoritesContract.SideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                is FavoritesContract.SideEffect.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
             }
         }
     }

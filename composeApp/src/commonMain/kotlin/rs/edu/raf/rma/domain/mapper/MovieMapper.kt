@@ -24,7 +24,7 @@ fun MovieEntity.toDomain(isFavorite: Boolean, inWatchlist: Boolean): Movie {
 }
 fun MovieWithDetails.toDomain(): MovieDetails {
     return MovieDetails(
-        movie = this.movie.toDomain(isFavorite = false, inWatchlist = false),
+        movie = this.movie.toDomain(isFavorite = this.isFavorite, inWatchlist = this.inWatchlist),
         overview = this.details?.overview,
         runtime = this.details?.runtime,
         backdropUrl = this.details?.backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" },

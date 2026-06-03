@@ -5,6 +5,8 @@ import androidx.room.Relation
 
 data class MovieWithDetails(
     @Embedded val movie: MovieEntity,
+    val isFavorite: Boolean,
+    val inWatchlist: Boolean,
 
     @Relation(
         parentColumn = "imdbId",

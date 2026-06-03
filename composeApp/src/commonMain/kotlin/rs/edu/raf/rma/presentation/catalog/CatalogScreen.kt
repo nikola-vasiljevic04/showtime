@@ -8,6 +8,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
 import rs.edu.raf.rma.presentation.catalog.components.CatalogContent
 import rs.edu.raf.rma.presentation.catalog.components.CatalogTopBar
 import rs.edu.raf.rma.presentation.catalog.components.EmptyState
@@ -19,10 +20,12 @@ fun CatalogScreen(
     viewModel: CatalogViewModel,
     onThemeToggle: () -> Unit,
     onNavigateToDetails: (String) -> Unit,
-    onNavigateToFilters: () -> Unit
+    onNavigateToFilters: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -34,7 +37,9 @@ fun CatalogScreen(
                     onNavigateToFilters()
                 }
                 is CatalogContract.SideEffect.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(effect.message)
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
                 }
             }
         }

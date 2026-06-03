@@ -21,11 +21,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import rs.edu.raf.rma.presentation.details.components.CastItem
+import rs.edu.raf.rma.presentation.details.components.FavoriteAndWatchlistSection
 import rs.edu.raf.rma.presentation.details.components.HeroSection
 import rs.edu.raf.rma.presentation.details.components.ImagesGallerySection
 import rs.edu.raf.rma.presentation.details.components.InfoSection
@@ -39,12 +42,17 @@ fun MovieDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 is MovieDetailsContract.SideEffect.NavigateBack -> onNavigateBack()
-                is MovieDetailsContract.SideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                is MovieDetailsContract.SideEffect.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
                 else -> {}
             }
         }
@@ -87,7 +95,14 @@ fun MovieDetailsScreen(
                     item {
                         TitleAndInfoSection(details = details)
                     }
-
+                    item {
+                        FavoriteAndWatchlistSection(
+                            isFavorite = details.movie.isFavorite,
+                            inWatchlist = details.movie.inWatchlist,
+                            onFavoriteClick = { viewModel.setEvent(MovieDetailsContract.UiEvent.ToggleFavorite) },
+                            onWatchlistClick = { viewModel.setEvent(MovieDetailsContract.UiEvent.ToggleWatchlist) }
+                        )
+                    }
                     item {
                         OverviewSection(overview = details.overview)
                     }

@@ -111,9 +111,16 @@ interface ShowtimeDao {
 
 
     @Transaction
-    @Query("SELECT * FROM movies WHERE imdbId = :id")
+    @Query("""
+        SELECT m.*, 
+               CASE WHEN f.movieId IS NOT NULL THEN 1 ELSE 0 END AS isFavorite,
+               CASE WHEN w.movieId IS NOT NULL THEN 1 ELSE 0 END AS inWatchlist
+        FROM movies m
+        LEFT JOIN favorites f ON m.imdbId = f.movieId
+        LEFT JOIN watchlist w ON m.imdbId = w.movieId
+        WHERE m.imdbId = :id
+    """)
     fun observeMovieDetails(id: String): Flow<MovieWithDetails?>
-
 
 
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
