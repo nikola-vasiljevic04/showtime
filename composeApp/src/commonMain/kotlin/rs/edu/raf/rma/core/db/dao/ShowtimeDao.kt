@@ -1,6 +1,11 @@
-package rs.edu.raf.rma.core.db
+package rs.edu.raf.rma.core.db.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import rs.edu.raf.rma.core.db.entities.FavoriteEntity
 import rs.edu.raf.rma.core.db.entities.GenreEntity
@@ -45,7 +50,7 @@ interface ShowtimeDao {
 
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertMovies(movies: List<MovieEntity>)
     @Query("""
         SELECT m.*, 
@@ -72,13 +77,13 @@ interface ShowtimeDao {
         INNER JOIN watchlist w ON m.imdbId = w.movieId
     """)
     fun observeWatchlist(): Flow<List<MovieWithStatus>>
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertFavorite(favorite: FavoriteEntity)
 
     @Delete
     suspend fun deleteFavorite(favorite: FavoriteEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertWatchlist(watchlist: WatchlistEntity)
 
     @Delete
@@ -95,7 +100,7 @@ interface ShowtimeDao {
 
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertGenres(genres: List<GenreEntity>)
 
 
@@ -111,6 +116,6 @@ interface ShowtimeDao {
 
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertMovieDetails(details: MovieDetailsEntity)
 }

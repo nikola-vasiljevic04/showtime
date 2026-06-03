@@ -23,6 +23,7 @@ fun ProfileScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is ProfileContract.SideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                else -> {}
             }
         }
     }

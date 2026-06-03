@@ -10,6 +10,7 @@ import rs.edu.raf.rma.core.auth.di.authCoreModule
 import rs.edu.raf.rma.core.db.di.databaseModule
 import rs.edu.raf.rma.networking.di.networkingModule
 import rs.edu.raf.rma.presentation.profile.di.profileFeatureModule
+import rs.edu.raf.rma.presentation.quiz.di.quizFeatureModule
 import rs.edu.raf.rma.presentation.state.FilterManager
 import rs.edu.raf.rma.splash.di.splashModule
 
@@ -24,6 +25,7 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication {
             catalogFeatureModule,
             splashModule,
             profileFeatureModule,
+            quizFeatureModule,
             module {
                 single { FilterManager() }
             }

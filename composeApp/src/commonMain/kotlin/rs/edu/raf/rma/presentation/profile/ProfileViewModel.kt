@@ -16,7 +16,7 @@ import rs.edu.raf.rma.domain.repository.ProfileRepository
 class ProfileViewModel(
     private val profileRepository: ProfileRepository,
     private val catalogRepository: CatalogRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileContract.UiState())
@@ -67,7 +67,7 @@ class ProfileViewModel(
                 }
                 .onFailure { e ->
                     setState { copy(isLoading = false, error = e) }
-                    _effects.emit(ProfileContract.SideEffect.ShowSnackbar("Error loading profile"))
+                    _effects.emit(ProfileContract.SideEffect.ShowSnackbar("Error loadning"))
                 }
         }
     }

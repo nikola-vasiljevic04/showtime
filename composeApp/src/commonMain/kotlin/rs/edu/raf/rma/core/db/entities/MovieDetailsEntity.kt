@@ -17,15 +17,15 @@ import androidx.room.PrimaryKey
 )
 data class MovieDetailsEntity(
     @PrimaryKey val movieId: String,
-    val overview: String?,
-    val runtime: Int?,
-    val backdropPath: String?,
-    val budget: Long?,
-    val revenue: Long?,
-    val language: String?,
-    val popularity: Double?,
-    val tmdbRating: Float?,
-    val trailerKey: String?,
-    val backdropsString: String?,
-    val castString: String?
+    val overview: String? = null,
+    val runtime: Int? = null,
+    val backdropPath: String? = null,
+    val budget: Long? = null,
+    val revenue: Long? = null,
+    val language: String? = null,
+    val popularity: Double? = null,
+    val tmdbRating: Float? = null,
+    val trailerKey: String? = null,
+    val backdropsString: String? = null,
+    val castString: String? = null
 )

@@ -16,4 +16,5 @@ actual fun databaseModule() = module {
         buildAppDatabase(builder)
     }
     single { get<AppDatabase>().showtimeDao() }
+    single { get<AppDatabase>().quizDao() }
 }

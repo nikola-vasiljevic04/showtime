@@ -6,7 +6,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import rs.edu.raf.rma.core.db.entities.MovieEntity
-import rs.edu.raf.rma.core.db.ShowtimeDao
+import rs.edu.raf.rma.core.db.dao.ShowtimeDao
 import rs.edu.raf.rma.core.db.entities.FavoriteEntity
 import rs.edu.raf.rma.core.db.entities.MovieDetailsEntity
 import rs.edu.raf.rma.core.db.entities.WatchlistEntity

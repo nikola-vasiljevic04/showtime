@@ -2,7 +2,7 @@ package rs.edu.raf.rma.auth
 
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthData
-import rs.edu.raf.rma.core.db.ShowtimeDao
+import rs.edu.raf.rma.core.db.dao.ShowtimeDao
 import rs.edu.raf.rma.networking.ShowtimeApi
 import rs.edu.raf.rma.networking.model.AuthRequest
 

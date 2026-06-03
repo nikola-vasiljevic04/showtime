@@ -4,10 +4,10 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import rs.edu.raf.rma.core.db.dao.QuizDao
+import rs.edu.raf.rma.core.db.dao.ShowtimeDao
 import rs.edu.raf.rma.core.db.entities.*
 
 @Database(
@@ -17,14 +17,16 @@ import rs.edu.raf.rma.core.db.entities.*
         GenreEntity::class,
         MovieDetailsEntity::class,
         FavoriteEntity::class,
-        WatchlistEntity::class
+        WatchlistEntity::class,
+        QuizSessionEntity::class
                ],
-    version = 5,
+    version = 6,
     exportSchema = false,
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun showtimeDao(): ShowtimeDao
+    abstract fun quizDao(): QuizDao
 }
 
 // The Room compiler generates the `actual` implementations.
