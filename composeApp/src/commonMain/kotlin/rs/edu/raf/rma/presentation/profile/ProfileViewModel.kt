@@ -7,9 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import rs.edu.raf.rma.auth.AuthRepository
+import rs.edu.raf.rma.core.db.dao.QuizDao
 import rs.edu.raf.rma.domain.repository.CatalogRepository
 import rs.edu.raf.rma.domain.repository.ProfileRepository
 
@@ -17,6 +19,7 @@ class ProfileViewModel(
     private val profileRepository: ProfileRepository,
     private val catalogRepository: CatalogRepository,
     private val authRepository: AuthRepository,
+    private val quizDao: QuizDao
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileContract.UiState())
@@ -37,7 +40,7 @@ class ProfileViewModel(
 
     init {
         observeEvents()
-        observeListCounts()
+        observeStats()
         setEvent(ProfileContract.UiEvent.LoadProfile)
     }
 
@@ -67,22 +70,29 @@ class ProfileViewModel(
                 }
                 .onFailure { e ->
                     setState { copy(isLoading = false, error = e) }
-                    _effects.emit(ProfileContract.SideEffect.ShowSnackbar("Error loadning"))
+                    _effects.emit(ProfileContract.SideEffect.ShowSnackbar("Error loading profile"))
                 }
         }
     }
 
-    private fun observeListCounts() {
+    private fun observeStats() {
         viewModelScope.launch {
-            catalogRepository.observeFavorites()
-                .catch {  }
-                .collect { list -> setState { copy(favoritesCount = list.size) } }
-        }
-
-        viewModelScope.launch {
-            catalogRepository.observeWatchlist()
-                .catch {  }
-                .collect { list -> setState { copy(watchlistCount = list.size) } }
+            combine(
+                catalogRepository.observeFavorites(),
+                catalogRepository.observeWatchlist(),
+                quizDao.observeBestScore(),
+                quizDao.observeGamesPlayed()
+            ) { favs, watch, bestScore, gamesPlayed ->
+                setState {
+                    copy(
+                        favoritesCount = favs.size,
+                        watchlistCount = watch.size,
+                        bestScore = bestScore ?: 0f,
+                        gamesPlayed = gamesPlayed
+                    )
+                }
+            }.catch { }
+                .collect {}
         }
     }
 

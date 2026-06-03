@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 import rs.edu.raf.rma.core.auth.AuthStore
 import rs.edu.raf.rma.core.auth.model.AuthState
+import rs.edu.raf.rma.core.db.dao.ShowtimeDao
 import rs.edu.raf.rma.networking.HttpClientFactory
 import rs.edu.raf.rma.networking.ShowtimeApi
 import rs.edu.raf.rma.networking.createShowtimeApi
@@ -27,8 +28,9 @@ val networkingModule = module {
 
     single<HttpClient>(Qualifiers.Authenticated) {
         val authStoreLazy: Lazy<AuthStore> = inject()
+        val showtimeDaoLazy: Lazy<ShowtimeDao> = inject()
         HttpClientFactory.createHttpClientWithDefaultConfig {
-            installAuthPlugin(authStoreLazy)
+            installAuthPlugin(authStoreLazy,showtimeDaoLazy)
         }
     }
     single<ShowtimeApi>(Qualifiers.Unauthenticated) {
@@ -50,6 +52,8 @@ val networkingModule = module {
 
 private fun HttpClientConfig<*>.installAuthPlugin(
     authStoreLazy: Lazy<AuthStore>,
+    showtimeDaoLazy: Lazy<ShowtimeDao>
+
 ) = install(createClientPlugin("AuthPlugin") {
 
     on(SetupRequest) { request ->
@@ -74,8 +78,12 @@ private fun HttpClientConfig<*>.installAuthPlugin(
             }
 
             val authStore = authStoreLazy.value
+            val showtimeDao = showtimeDaoLazy.value
+
             CoroutineScope(Dispatchers.Default).launch {
                 authStore.clearAuthData()
+                showtimeDao.clearFavorites()
+                showtimeDao.clearWatchlist()
             }
 
             originalCall

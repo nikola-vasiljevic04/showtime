@@ -1,15 +1,21 @@
 package rs.edu.raf.rma.presentation.profile
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import rs.edu.raf.rma.presentation.profile.components.LogoutButton
+import rs.edu.raf.rma.presentation.profile.components.StatCard
 import rs.edu.raf.rma.presentation.profile.components.UserProfileHeader
-import rs.edu.raf.rma.presentation.profile.components.UserStatsSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,10 +61,47 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    UserStatsSection(
-                        favoritesCount = state.favoritesCount,
-                        watchlistCount = state.watchlistCount
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Favorites",
+                            count = state.favoritesCount,
+                            icon = Icons.Filled.Favorite,
+                            tint = Color.Red
+                        )
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Watchlist",
+                            count = state.watchlistCount,
+                            icon = Icons.Filled.Bookmark,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Best Score",
+                            count = state.bestScore.toInt(),
+                            icon = Icons.Filled.Star,
+                            tint = Color(0xFFFFC107)
+                        )
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Quizzes Played",
+                            count = state.gamesPlayed,
+                            icon = Icons.Filled.Quiz,
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                    }
 
                     Spacer(modifier = Modifier.weight(1f))
 

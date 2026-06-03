@@ -46,6 +46,7 @@ class QuizRepositoryImpl(
 
         val questions = mutableListOf<QuizQuestion>()
         val usedImages = mutableSetOf<String>()
+        val usedMovieIds = mutableSetOf<String>()
         val typeCounts = mutableMapOf(QType.MOVIE to 0, QType.YEAR to 0, QType.ACTOR to 0)
 
         var attempts = 0
@@ -55,7 +56,7 @@ class QuizRepositoryImpl(
             var questionAdded = false
 
             for (type in availableTypes) {
-                val q = tryGenerateQuestion(type, allDetailsList, moviesMap, usedImages)
+                val q = tryGenerateQuestion(type, allDetailsList, moviesMap, usedImages, usedMovieIds)
                 if (q != null) {
                     questions.add(q)
                     usedImages.add(q.imageUrl)
@@ -78,11 +79,14 @@ class QuizRepositoryImpl(
         type: QType,
         detailsList: List<MovieDetailsEntity>,
         moviesMap: Map<String, MovieEntity>,
-        usedImages: Set<String>
+        usedImages: Set<String>,
+        usedMovieIds: MutableSet<String>
     ): QuizQuestion? {
 
         val detail = detailsList.shuffled().firstOrNull { d ->
             val movie = moviesMap[d.movieId] ?: return@firstOrNull false
+            if (usedMovieIds.contains(movie.imdbId)) return@firstOrNull false
+
             val poster = movie.posterPath?.let { "https://image.tmdb.org/t/p/w500$it" }
             val backdrop = d.backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" }
 
@@ -109,6 +113,7 @@ class QuizRepositoryImpl(
 
                 if (wrongOptions.size < 3) return null
 
+                usedMovieIds.add(movie.imdbId)
                 val options = (wrongOptions + movie.title).shuffled()
                 QuizQuestion.GuessMovie(imageUrl, options, options.indexOf(movie.title))
             }
@@ -118,11 +123,19 @@ class QuizRepositoryImpl(
                 val correctYear = movie.year ?: return null
 
                 val wrongOptions = mutableSetOf<Int>()
-                while (wrongOptions.size < 3) {
+                var yearAttempts = 0
+                while (wrongOptions.size < 3 && yearAttempts < 100) {
+                    yearAttempts++
                     val offset = (-10..10).filter { it != 0 }.random()
-                    wrongOptions.add(correctYear + offset)
+                    val fakeYear = correctYear + offset
+                    if (fakeYear <= 2026 && fakeYear != correctYear) {
+                        wrongOptions.add(fakeYear)
+                    }
                 }
 
+                if (wrongOptions.size < 3) return null
+
+                usedMovieIds.add(movie.imdbId)
                 val options = (wrongOptions.map { it.toString() } + correctYear.toString()).shuffled()
                 QuizQuestion.GuessYear(movie.title, imageUrl, options, options.indexOf(correctYear.toString()))
             }
@@ -150,6 +163,9 @@ class QuizRepositoryImpl(
                         .distinct()
                 }
 
+                if (allOtherActors.size < 3) return null
+
+                usedMovieIds.add(movie.imdbId)
                 val options = (allOtherActors.shuffled().take(3) + correctActor).shuffled()
                 QuizQuestion.GuessActor(movie.title, imageUrl, options, options.indexOf(correctActor))
             }
