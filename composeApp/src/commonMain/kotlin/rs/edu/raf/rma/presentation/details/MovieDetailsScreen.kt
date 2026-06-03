@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ fun MovieDetailsScreen(
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -53,7 +55,9 @@ fun MovieDetailsScreen(
                         snackbarHostState.showSnackbar(effect.message)
                     }
                 }
-                else -> {}
+                is MovieDetailsContract.SideEffect.OpenYoutube -> {
+                    uriHandler.openUri("https://www.youtube.com/watch?v=${effect.videoKey}")
+                }
             }
         }
     }
@@ -88,7 +92,13 @@ fun MovieDetailsScreen(
                             backdropPath = details.backdropUrl ?: details.movie.posterUrl,
                             trailerKey = details.trailerKey,
                             onBackClicked = { viewModel.setEvent(MovieDetailsContract.UiEvent.NavigateBack) },
-                            onPlayClicked = {}
+                            onPlayClicked = {
+                                details.trailerKey?.let { key ->
+                                    if (key.isNotBlank()) {
+                                        viewModel.setEvent(MovieDetailsContract.UiEvent.PlayTrailer(key))
+                                    }
+                                }
+                            }
                         )
                     }
 

@@ -11,7 +11,7 @@ interface MovieDetailsContract {
 
     sealed class UiEvent {
         data object Refresh : UiEvent()
-        data class PlayTrailer(val videoKey: String) : UiEvent() // Dodato
+        data class PlayTrailer(val videoKey: String) : UiEvent()
         data object ToggleFavorite : UiEvent()
         data object ToggleWatchlist : UiEvent()
         data object NavigateBack : UiEvent()
@@ -19,7 +19,7 @@ interface MovieDetailsContract {
 
     sealed class SideEffect {
         data object NavigateBack : SideEffect()
-        data class OpenYoutube(val videoKey: String) : SideEffect() // Dodato
+        data class OpenYoutube(val videoKey: String) : SideEffect()
         data class ShowSnackbar(val message: String) : SideEffect()
     }
 }

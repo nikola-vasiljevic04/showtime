@@ -48,7 +48,7 @@ class MovieDetailsViewModel(
                     is MovieDetailsContract.UiEvent.ToggleFavorite -> toggleFavorite()
                     is MovieDetailsContract.UiEvent.ToggleWatchlist -> toggleWatchlist()
                     is MovieDetailsContract.UiEvent.NavigateBack -> _effects.emit(MovieDetailsContract.SideEffect.NavigateBack)
-                    else -> {}
+                    is MovieDetailsContract.UiEvent.PlayTrailer -> _effects.emit(MovieDetailsContract.SideEffect.OpenYoutube(event.videoKey))
                 }
             }
         }
