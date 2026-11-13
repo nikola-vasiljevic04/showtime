@@ -1,48 +1,64 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+# Showtime 🎬
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+A cross-platform movie app built with **Kotlin Multiplatform** and **Compose Multiplatform**. You can browse a movie catalog, save favorites and a watchlist, and test your movie knowledge in a timed quiz with a global leaderboard.
 
-* [/app/ios](./app/ios/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+> Built as the course project for *Mobile Application Development* (RMA) at the School of Computing (RAF), Union University.
 
-### Build and Run Android Application
+## Features
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+- **Authentication**: sign up and log in against a REST API. The access token is stored with DataStore.
+- **Movie catalog**: paginated list with search, filters (genre, minimum rating, year range) and sorting.
+- **Movie details**: overview, cast, image gallery, trailers, production companies and collections.
+- **Favorites & watchlist**: synced with the backend. Updates are optimistic: the change shows immediately and is rolled back if the API call fails.
+- **Movie quiz**: 10 questions generated from cached movie data (guess the movie, the release year or the actor), with a 60-second timer.
+- **Leaderboard & profile**: results are submitted to a global leaderboard, and personal stats are kept locally.
+- **Offline-friendly**: movies, genres and details are cached in a local Room database.
 
-### Build and Run Desktop (JVM) Application
+## Tech stack
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+| Area | Libraries |
+|---|---|
+| UI | Compose Multiplatform, Material 3, Navigation |
+| Architecture | MVI-style ViewModels (UiState / UiEvent / SideEffect), repository pattern, Kotlin Coroutines & Flow |
+| Networking | Ktor client, Ktorfit, kotlinx.serialization |
+| Local storage | Room (SQLite), DataStore |
+| Dependency injection | Koin |
+| Images | Coil 3 |
+| Logging | Napier |
 
-### Build and Run iOS Application
+## Project structure
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/app/ios](./app/ios) directory in Xcode and run it from there.
+```
+composeApp/        Shared code (commonMain) + platform-specific source sets
+  ├─ auth/         Login & signup
+  ├─ core/         Room database, DAOs, auth storage
+  ├─ data/         Repository implementations
+  ├─ domain/       Models & repository interfaces
+  ├─ networking/   API definition, HTTP client, DTOs
+  └─ presentation/ Screens: catalog, details, filters, favorites, watchlist, quiz, profile
+app/android/       Android entry point
+app/desktop/       Desktop (JVM) entry point
+app/ios/           iOS entry point
+```
 
----
+## Running the app
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+**Android**
+```bash
+./gradlew :app:android:installDebug
+```
+Or run the `app.android` configuration from Android Studio.
+
+**Desktop (JVM)**
+```bash
+./gradlew :app:desktop:run
+```
+
+**iOS**: open `app/ios` in Xcode and run it.
+
+## What I learned
+
+- Sharing business logic and UI across Android, iOS and Desktop with Kotlin Multiplatform
+- Consuming a REST API with authentication, pagination and query parameters
+- Combining a remote API with a local database cache
+- Unidirectional data flow (MVI) with StateFlow and Compose
